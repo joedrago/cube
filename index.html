@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#000000">
+<link rel="manifest" href="manifest.webmanifest"/>
+<title>Rubik's Cube</title>
+<style>
+    html, body {
+        margin: 0px;
+        padding: 0px;
+        background-color: #000;
+
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    #cube {
+        background-color: #000;
+        width: 50vh;
+        height: 50vh;
+    }
+    .button {
+        display: inline-block;
+        width: 6vh;
+        height: 6vh;
+    }
+
+    .buttonsrow {
+        width: 100%;
+    }
+
+    .ba {
+        cursor: pointer;
+        background-size: cover;
+    }
+
+    @media (max-aspect-ratio: 0.5) {
+        #cube {
+            width: 100vw;
+            height: 100vw;
+        }
+        .button {
+            width: 12vw;
+            height: 12vw;
+        }
+    }
+
+</style>
+<script src="ext/gl-matrix-min.js"></script>
+<script src="js/index.js" type="module"></script>
+</head>
+
+<body>
+    <center>
+    <canvas id="cube" width="512" height="512"></canvas>
+    <div id="buttons">
+        <div id="buttonsrow">
+            <div class="button ba" style="background-image: url(images/grayctl.png)" onclick="event.preventDefault(); window.cube.act(ACTION_TILT, TILT_TL)"></div>
+            <div class="button ba" style="background-image: url(images/rd.png)" onclick="event.preventDefault(); window.cube.act(ACTION_ROT, ROT_F, false)"></div>
+            <div class="button ba" style="background-image: url(images/u.png)" onclick="event.preventDefault(); window.cube.act(ACTION_ROT, ROT_L, false)"></div>
+            <div class="button ba" style="background-image: url(images/u.png)" onclick="event.preventDefault(); window.cube.act(ACTION_ROT, ROT_X, true)"></div>
+            <div class="button ba" style="background-image: url(images/u.png)" onclick="event.preventDefault(); window.cube.act(ACTION_ROT, ROT_R, true)"></div>
+            <div class="button ba" style="background-image: url(images/ld.png)" onclick="event.preventDefault(); window.cube.act(ACTION_ROT, ROT_F, true)"></div>
+            <div class="button ba" style="background-image: url(images/grayctr.png)" onclick="event.preventDefault(); window.cube.act(ACTION_TILT, TILT_TR)"></div>
+        </div>
+        <div id="buttonsrow">
+            <div class="button" onclick="event.preventDefault()"></div>
+            <div class="button ba" style="background-image: url(images/l.png)" onclick="event.preventDefault(); window.cube.act(ACTION_ROT, ROT_U, true)"></div>
+            <div class="button ba" style="background-image: url(images/grayrd.png)" onclick="event.preventDefault(); window.cube.act(ACTION_LOOK, ROT_Z, true)"></div>
+            <div class="button ba" style="background-image: url(images/grayu.png)" onclick="event.preventDefault(); window.cube.act(ACTION_LOOK, ROT_X, true)"></div>
+            <div class="button ba" style="background-image: url(images/grayld.png)" onclick="event.preventDefault(); window.cube.act(ACTION_LOOK, ROT_Z, false)"></div>
+            <div class="button ba" style="background-image: url(images/r.png)" onclick="event.preventDefault(); window.cube.act(ACTION_ROT, ROT_U, false)"></div>
+            <div class="button" onclick="event.preventDefault()"></div>
+        </div>
+        <div id="buttonsrow">
+            <div class="button" onclick="event.preventDefault()"></div>
+            <div class="button ba" style="background-image: url(images/l.png)" onclick="event.preventDefault(); window.cube.act(ACTION_ROT, ROT_Y, true)"></div>
+            <div class="button ba" style="background-image: url(images/grayl.png)" onclick="event.preventDefault(); window.cube.act(ACTION_LOOK, ROT_Y, true)"></div>
+            <div class="button" onclick="event.preventDefault()"></div>
+            <div class="button ba" style="background-image: url(images/grayr.png)" onclick="event.preventDefault(); window.cube.act(ACTION_LOOK, ROT_Y, false)"></div>
+            <div class="button ba" style="background-image: url(images/r.png)" onclick="event.preventDefault(); window.cube.act(ACTION_ROT, ROT_Y, false)"></div>
+            <div class="button" onclick="event.preventDefault()"></div>
+        </div>
+        <div id="buttonsrow">
+            <div class="button" onclick="event.preventDefault()"></div>
+            <div class="button ba" style="background-image: url(images/l.png)" onclick="event.preventDefault(); window.cube.act(ACTION_ROT, ROT_D, false)"></div>
+            <div class="button" onclick="event.preventDefault()"></div>
+            <div class="button ba" style="background-image: url(images/grayd.png)" onclick="event.preventDefault(); window.cube.act(ACTION_LOOK, ROT_X, false)"></div>
+            <div class="button" onclick="event.preventDefault()"></div>
+            <div class="button ba" style="background-image: url(images/r.png)" onclick="event.preventDefault(); window.cube.act(ACTION_ROT, ROT_D, true)"></div>
+            <div class="button" onclick="event.preventDefault()"></div>
+        </div>
+        <div id="buttonsrow">
+            <div class="button ba" style="background-image: url(images/graycbl.png)" onclick="event.preventDefault(); window.cube.act(ACTION_TILT, TILT_BL)"></div>
+            <div class="button" onclick="event.preventDefault()"></div>
+            <div class="button ba" style="background-image: url(images/d.png)" onclick="event.preventDefault(); window.cube.act(ACTION_ROT, ROT_L, true)"></div>
+            <div class="button ba" style="background-image: url(images/d.png)" onclick="event.preventDefault(); window.cube.act(ACTION_ROT, ROT_X, false)"></div>
+            <div class="button ba" style="background-image: url(images/d.png)" onclick="event.preventDefault(); window.cube.act(ACTION_ROT, ROT_R, false)"></div>
+            <div class="button" onclick="event.preventDefault()"></div>
+            <div class="button ba" style="background-image: url(images/graycbr.png)" onclick="event.preventDefault(); window.cube.act(ACTION_TILT, TILT_BR)"></div>
+        </div>
+        <div id="buttonsrow">
+            <div class="button" onclick="event.preventDefault()"></div>
+            <div class="button" onclick="event.preventDefault()"></div>
+            <div class="button" onclick="event.preventDefault()"></div>
+            <div class="button" onclick="event.preventDefault()"></div>
+            <div class="button" onclick="event.preventDefault()"></div>
+            <div class="button" onclick="event.preventDefault()"></div>
+            <div class="button" onclick="event.preventDefault()"></div>
+        </div>
+        <div id="buttonsrow">
+            <div class="button ba" style="background-image: url(images/shuffle.png)" ondblclick="window.cube.shuffle()"></div>
+            <div class="button" onclick="event.preventDefault()"></div>
+            <div class="button ba" style="background-image: url(images/move0.png)" ondblclick="window.cube.act(ACTION_MOVE, MOVE_SWAP_FB_CORNERS)"></div>
+            <div class="button" onclick="event.preventDefault()"></div>
+            <div class="button ba" style="background-image: url(images/move1.png)" ondblclick="window.cube.act(ACTION_MOVE, MOVE_SPIN_3_CORNERS)"></div>
+            <div class="button" onclick="event.preventDefault()"></div>
+            <div class="button ba" style="background-image: url(images/move2.png)" ondblclick="window.cube.act(ACTION_MOVE, MOVE_RUBE_MOVE)"></div>
+        </div>
+    </div>
+</center>
+</body>
+</html>
