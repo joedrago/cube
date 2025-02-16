@@ -41,6 +41,7 @@ window.TILT_TL = 0
 window.TILT_TR = 1
 window.TILT_BL = 2
 window.TILT_BR = 3
+window.TILT_UD = 4
 
 const FACE_COLORS = [
     [1.0, 1.0, 0.0],
@@ -328,7 +329,8 @@ class Cube {
 
     drawCubieFace(xrot, yrot, zrot, face, tx, ty, color) {
         const projectionMatrix = mat4.create()
-        mat4.frustum(projectionMatrix, -1, 1, 1, -1, 1, 20)
+        const EXTENTS = 0.65
+        mat4.frustum(projectionMatrix, -EXTENTS, EXTENTS, EXTENTS, -EXTENTS, 1, 20)
 
         const viewMatrix = mat4.create()
         mat4.lookAt(viewMatrix, [0, 0, 1], [0, 0, 5], [0, 1, 0])
@@ -502,6 +504,9 @@ class Cube {
                 case TILT_BR:
                     this.spinReqX = -VIEW_TILT_ANGLE
                     this.spinReqY = -VIEW_TILT_ANGLE
+                    break
+                case TILT_UD:
+                    this.spinReqX = -this.spinReqX
                     break
             }
         } else {
