@@ -52,6 +52,8 @@ const FACE_COLORS = [
     [1.0, 0.0, 0.0]
 ]
 
+const OPPOSITE_SIDE = [FACE_D, FACE_U, FACE_R, FACE_L, FACE_F, FACE_B]
+
 const SPIN_INDICES = [
     [FACE_F, 0, 1, 2, FACE_L, 0, 1, 2, FACE_B, 0, 1, 2, FACE_R, 0, 1, 2], // ROT_U
     [FACE_F, 6, 7, 8, FACE_R, 6, 7, 8, FACE_B, 6, 7, 8, FACE_L, 6, 7, 8], // ROT_D
@@ -516,6 +518,89 @@ class Cube {
         kick()
     }
 
+    faceMatches(faceIndex, cornersOnly) {
+        const faceColor = this.cubies[faceIndex][0]
+        if (cornersOnly) {
+            for (let cubie = 2; cubie <= 8; cubie += 2) {
+                if (this.cubies[faceIndex][cubie] != faceColor) {
+                    return false
+                }
+            }
+        } else {
+            for (let cubie = 1; cubie <= 8; ++cubie) {
+                if (this.cubies[faceIndex][cubie] != faceColor) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+    sideMatches(faceIndex, cornersOnly) {
+        if (!this.faceMatches(faceIndex, cornersOnly)) {
+            return false
+        }
+
+        const checkIndices = SPIN_INDICES[faceIndex]
+
+        for (let side = 0; side < 4; ++side) {
+            const sideIndex = side * 4
+            const face = checkIndices[sideIndex]
+            const sideColor = this.cubies[face][checkIndices[sideIndex + 1]]
+            const cubieStart = cornersOnly ? 3 : 2
+            for (let cubie = cubieStart; cubie <= 3; ++cubie) {
+                if (this.cubies[face][checkIndices[sideIndex + cubie]] != sideColor) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+    setDescription(desc) {
+        document.getElementById("description").innerHTML = desc
+    }
+
+    updateDescription() {
+        console.log("updateDescription()")
+        let sideCount = 0
+        let oppositeCornerCount = 0
+        let cornerCount = 0
+        for (let side = 0; side < 6; ++side) {
+            let sideDone = this.sideMatches(side)
+            if (sideDone) {
+                // console.log(`Side done: ${side}`)
+                ++sideCount
+                if (this.sideMatches(OPPOSITE_SIDE[side], true)) {
+                    ++oppositeCornerCount
+                }
+            } else {
+                let cornersDone = this.sideMatches(side, true)
+                if (cornersDone) {
+                    // console.log(`Corners done: ${side}`)
+                    ++cornerCount
+                }
+            }
+        }
+        // console.log(`sideCount ${sideCount} cornerCount ${cornerCount} oppositeCornerCount ${oppositeCornerCount}`)
+
+        let desc = "Shuffled"
+        if (sideCount == 6) {
+            desc = `<div class="solved">Solved!</div>`
+        } else if (sideCount >= 2) {
+            desc = `<div class="almost">Top & Bottom</div>`
+        } else if (sideCount == 1 && oppositeCornerCount == 0) {
+            desc = `<div>Top</div>`
+        } else if (sideCount == 1 && oppositeCornerCount == 1) {
+            desc = `<div>Top & Corners</div>`
+        } else if (sideCount == 0 && cornerCount == 1) {
+            desc = `<div>Early Corners</div>`
+        } else if (sideCount == 0 && cornerCount >= 2) {
+            desc = `<div>All Corners</div>`
+        }
+        this.setDescription(desc)
+    }
+
     update() {
         let animating = false
 
@@ -544,6 +629,7 @@ class Cube {
         if (!animating) {
             if (this.actions.length == 0) {
                 this.rotateSpeed = ROTATE_SPEED
+                this.updateDescription()
             } else {
                 const a = this.actions.shift()
 

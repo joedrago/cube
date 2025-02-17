@@ -47,7 +47,27 @@
         background-size: cover;
     }
 
+    #description {
+        font-family: monospace;
+        color: #555;
+        font-size: 3vh;
+        width: 100%;
+        text-align: center;
+    }
+
+    .almost {
+        color: #ffffaa;
+    }
+
+    .solved {
+        color: #aaffaa;
+    }
+
     @media (max-aspect-ratio: 0.5) {
+        #description {
+            font-size: 6vw;
+        }
+
         #cube {
             width: 60vw;
             height: 60vw;
@@ -77,11 +97,7 @@
         </tr>
 
         <tr>
-            <td><div class="button" onclick="event.preventDefault()"></div></td>
-            <td><div class="button" onclick="event.preventDefault()"></div></td>
-            <td><div class="button" onclick="event.preventDefault()"></div></td>
-            <td><div class="button" onclick="event.preventDefault()"></div></td>
-            <td><div class="button" onclick="event.preventDefault()"></div></td>
+            <td colspan=5><div class="button" id="description" onclick="event.preventDefault()">Description!</div></td>
         </tr>
 
         <tr>
