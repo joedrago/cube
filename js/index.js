@@ -574,6 +574,53 @@ class Cube {
         return animating
     }
 
+    touched(event) {
+        const x = Math.floor((3 * event.offsetX) / event.srcElement.clientWidth)
+        const y = Math.floor((3 * event.offsetY) / event.srcElement.clientHeight)
+        const which = y * 3 + x
+        // console.log(`${x}, ${y} (index ${index})`)
+        switch (which) {
+            case 0: {
+                window.cube.act(ACTION_LOOK, ROT_Z, true)
+                break
+            }
+            case 1: {
+                window.cube.act(ACTION_LOOK, ROT_X, true)
+                break
+            }
+            case 2: {
+                window.cube.act(ACTION_LOOK, ROT_Z, false)
+                break
+            }
+
+            case 3: {
+                window.cube.act(ACTION_LOOK, ROT_Y, true)
+                break
+            }
+            case 4: {
+                window.cube.act(ACTION_TILT, TILT_UD, true)
+                break
+            }
+            case 5: {
+                window.cube.act(ACTION_LOOK, ROT_Y, false)
+                break
+            }
+
+            case 6: {
+                window.cube.act(ACTION_LOOK, ROT_Z, true)
+                break
+            }
+            case 7: {
+                window.cube.act(ACTION_LOOK, ROT_X, false)
+                break
+            }
+            case 8: {
+                window.cube.act(ACTION_LOOK, ROT_Z, false)
+                break
+            }
+        }
+    }
+
     draw() {
         const animating = this.update()
 
