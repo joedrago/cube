@@ -593,10 +593,10 @@ class Cube {
             desc = `<div>Top</div>`
         } else if (sideCount == 1 && oppositeCornerCount == 1) {
             desc = `<div>Top & Corners</div>`
+        } else if (sideCount == 0 && cornerCount == 6) {
+            desc = `<div>All Corners</div>`
         } else if (sideCount == 0 && cornerCount == 1) {
             desc = `<div>Early Corners</div>`
-        } else if (sideCount == 0 && cornerCount >= 2) {
-            desc = `<div>All Corners</div>`
         }
         this.setDescription(desc)
     }
